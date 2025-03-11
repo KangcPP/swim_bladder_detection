@@ -141,7 +141,7 @@ def cfar_fast(
 
 
 ########### episode detection
-def find_periods(ori_up_idx, ori_down_idx):
+def find_periods(ori_up_idx, ori_down_idx, window=40):
     ori_up = sorted(ori_up_idx)
     ori_down = sorted(ori_down_idx)
     used_up = set()
@@ -161,7 +161,7 @@ def find_periods(ori_up_idx, ori_down_idx):
         j_up = i_up + 1
         while j_up < len(ori_up):
             next_up = ori_up[j_up]
-            if next_up - current_up > 40:
+            if next_up - current_up > window:
                 break
             # Check if any down exists between current_up and next_up
             has_down = False
@@ -181,7 +181,7 @@ def find_periods(ori_up_idx, ori_down_idx):
         current_down = None
         # Find the first down after current_up and within 40 frames
         for d in ori_down:
-            if d > current_up and d <= current_up + 40 and d not in used_down:
+            if d > current_up and d <= current_up + window and d not in used_down:
                 current_down = d
                 break
         if current_down is None:
@@ -194,7 +194,7 @@ def find_periods(ori_up_idx, ori_down_idx):
         while True:
             next_down = None
             for d in ori_down:
-                if d > current_down and d <= current_down + 40 and d not in used_down:
+                if d > current_down and d <= current_down + window and d not in used_down:
                     next_down = d
                     break
             if next_down is None:
